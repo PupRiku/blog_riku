@@ -29,10 +29,27 @@ Content here. `<Callout>` and anything else in `components/mdx.tsx` is usable wi
 
 The index shows the 3 newest posts as featured cards and everything older in a smaller grid below.
 
+### #AfterDark posts
+
+Tag a post `afterdark` (any case) to mark it adult-adjacent. Readers pick how those posts are handled, from a first-visit banner or the After Dark menu in the header:
+
+- **Hidden** (the default until they choose): left off the index, and direct links bounce to `/`
+- **Blur images**: listed as usual, but images in them are blurred until a reader clicks to reveal one
+- **Shown**: no filtering
+
+The choice is saved in `localStorage` and applied before first paint, so there's no flash of hidden content.
+
+## About page
+
+`app/about/page.tsx` is a standalone page, not a post, so it never shows up in the index. The portrait is `public/images/about-portrait.jpg` (2:3), shown with `next/image`.
+
 ## Layout
 
 - `lib/posts.ts` reads and validates frontmatter (gray-matter) and sorts posts newest first
 - `app/page.tsx` is the index, `app/[slug]/page.tsx` is a post (next-mdx-remote + rehype-pretty-code/shiki), statically generated
 - `app/layout.tsx` is the shared header/footer shell. It also loads the fonts via `next/font/google`: Raleway 700 for the site title and h1–h3, Inter for body text (both fall back to system-ui)
+- `app/about/page.tsx` is the About page (see above)
 - `app/globals.css` holds all styling, with light/dark colors as CSS variables on `:root`
+- `components/ThemeToggle.tsx` is the header light/dark toggle. It follows the system setting until clicked, then saves the choice in `localStorage`
+- `components/AfterDark.tsx` and `lib/afterdark.ts` hold the #AfterDark filter: the header menu, first-visit banner, and the gate that redirects hidden posts
 - `components/Ads.tsx` holds the ad hooks. Set `NEXT_PUBLIC_ADSENSE_CLIENT=ca-pub-…` (in Vercel env vars) to load the AdSense script site-wide. `<AdSlot name="…"/>` marks unit positions (one is already at the bottom of posts). Both render nothing while the variable is unset.
