@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 // Must match the key read by the inline script in app/layout.tsx
 const THEME_KEY = "theme";
 
@@ -11,17 +13,37 @@ function currentTheme(): "dark" | "light" {
 
 // Both icons are always rendered; CSS shows the one for the active theme, so
 // the server HTML never disagrees with the client about which to show.
+// aria-pressed is filled in after mount for screen readers.
 export function ThemeToggle() {
+  const [theme, setTheme] = useState<"dark" | "light" | null>(null);
+
+  useEffect(() => {
+    setTheme(currentTheme());
+    // With no saved choice, follow live system changes
+    const mq = matchMedia("(prefers-color-scheme: dark)");
+    const onChange = () => setTheme(currentTheme());
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
   function toggle() {
     const next = currentTheme() === "dark" ? "light" : "dark";
     document.documentElement.dataset.theme = next;
+    setTheme(next);
     try {
       localStorage.setItem(THEME_KEY, next);
     } catch {}
   }
 
   return (
-    <button type="button" className="theme-toggle" onClick={toggle} aria-label="Toggle dark mode" title="Toggle dark mode">
+    <button
+      type="button"
+      className="theme-toggle"
+      onClick={toggle}
+      aria-label="Dark mode"
+      aria-pressed={theme === null ? undefined : theme === "dark"}
+      title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+    >
       <svg className="icon-moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
         <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z" />
       </svg>
