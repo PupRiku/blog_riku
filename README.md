@@ -25,7 +25,7 @@ slug: custom-url          # optional, defaults to the filename
 Content here. `<Callout>` and anything else in `components/mdx.tsx` is usable without importing.
 ```
 
-`image` is the card image on the index page: a path under `public/` (starting with `/`) or a full `http(s)://` URL. It's cropped to fit (16:9 for featured cards, wider strips elsewhere), so keep the subject near the center. Posts without one get a solid brand-color block instead.
+`image` is the card image on the index page: a path under `public/` (starting with `/`) or a full `http(s)://` URL. It's cropped to fit to the card it lands in (2:1 for the newest post's hero card, 16:9 for the next two, 3:1 in the grid below), so keep the subject near the center. Posts without one get a solid brand-color block instead.
 
 The index shows the 3 newest posts as featured cards and everything older in a smaller grid below.
 
