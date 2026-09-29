@@ -1,0 +1,43 @@
+---
+title: 'Design Test Post'
+date: '2026-09-29'
+description: 'A placeholder post to stress-test typography, code blocks, and spacing.'
+tags: ['test']
+---
+
+This is a standard paragraph to check body text sizing, line height, and measure (how wide a line of text runs before wrapping). Good body copy usually sits somewhere around 60-75 characters per line for readability, so this is worth eyeballing once it renders.
+
+## A Second-Level Heading
+
+Here's a bit more text under a heading, just to see how heading-to-paragraph spacing looks. This is also a good spot to check if links render distinctly, like [this one going to Vercel](https://vercel.com).
+
+### A Third-Level Heading
+
+A nested heading to check the visual hierarchy between H2 and H3. If they look too similar, that's worth adjusting.
+
+Here's a bullet list:
+
+- First item in the list
+- Second item, slightly longer to see how wrapping looks
+- Third item
+
+And a blockquote:
+
+> This is a blockquote. Useful for checking indentation, border styling, and whether it's visually distinct enough from regular body text.
+
+Here's a code block to check syntax highlighting:
+
+```javascript
+function getPost(slug) {
+  const filePath = path.join(postsDirectory, `${slug}.mdx`);
+  const fileContents = fs.readFileSync(filePath, 'utf8');
+  const { data, content } = matter(fileContents);
+  return { slug, frontmatter: data, content };
+}
+```
+
+And an image:
+
+![Placeholder image](https://placehold.co/800x400)
+
+One last paragraph after the image to see how spacing recovers afterward.
