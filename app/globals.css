@@ -14,6 +14,9 @@
   --quote-border: #b9b1d9; /* faded brand purple */
   --highlight: #69e9f5;    /* brand cyan: selection only, never text */
   --code-bg: #f6f8fa;
+  --afterdark-fg: #ffffff; /* #AfterDark tag: deep red, distinct from the purple tags */
+  --afterdark-bg: #9b1c2e;
+  --afterdark-border: #9b1c2e;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -28,6 +31,9 @@
     --tag-border: #574a8f;
     --quote-border: #4a3f80;
     --code-bg: #0d1117;
+    --afterdark-fg: #fde2e5;
+    --afterdark-bg: #7a1626;
+    --afterdark-border: #a3283b;
   }
 }
 :root[data-theme="dark"] {
@@ -42,6 +48,9 @@
   --tag-border: #574a8f;
   --quote-border: #4a3f80;
   --code-bg: #0d1117;
+  --afterdark-fg: #fde2e5;
+  --afterdark-bg: #7a1626;
+  --afterdark-border: #a3283b;
 }
 
 * { box-sizing: border-box; }
@@ -78,6 +87,46 @@ a { color: var(--accent); }
   :root:not([data-theme="light"]) .theme-toggle .icon-sun { display: block; }
   :root:not([data-theme="light"]) .theme-toggle .icon-moon { display: none; }
 }
+/* After Dark: data-afterdark on <html> is "on" | "hide-images" | "off", set
+   before paint by the inline script in app/layout.tsx. With no JS it's unset,
+   which the index treats as "on" and post pages treat as "off". */
+.afterdark-select { display: inline-flex; align-items: center; gap: 0.35rem; color: var(--muted); font-size: 0.85rem; white-space: nowrap; }
+.afterdark-select:not([data-ready]) { visibility: hidden; } /* until the saved value is known */
+.afterdark-select select { font: inherit; color: var(--fg); background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 0.1rem 0.25rem; cursor: pointer; }
+.afterdark-select select:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+@media (max-width: 26rem) { .afterdark-select-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; } }
+
+.afterdark-banner { position: relative; margin: -0.5rem 0 2rem; padding: 1rem 2.5rem 1rem 1rem; border: 1px solid var(--border); border-left: 4px solid var(--afterdark-border); border-radius: 4px; font-size: 0.95rem; }
+.afterdark-banner:not(.afterdark-notice) { display: none; }
+:root[data-afterdark-prompt] .afterdark-banner { display: block; }
+.afterdark-banner p { margin: 0; }
+.afterdark-hint { margin-top: 0.75rem !important; color: var(--muted); font-size: 0.85rem; }
+.afterdark-options { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem; }
+.afterdark-options button { font: inherit; font-size: 0.875rem; color: var(--fg); background: var(--bg); border: 1px solid var(--border); border-radius: 999px; padding: 0.3rem 0.85rem; cursor: pointer; transition: border-color 0.15s, color 0.15s; }
+.afterdark-options button:hover, .afterdark-options button:focus-visible { color: var(--accent); border-color: var(--accent); }
+.afterdark-options button:focus-visible, .afterdark-close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.afterdark-close { position: absolute; top: 0.5rem; right: 0.5rem; width: 1.75rem; height: 1.75rem; font-size: 1.25rem; line-height: 1; color: var(--muted); background: none; border: 0; border-radius: 4px; cursor: pointer; }
+.afterdark-close:hover { color: var(--accent); }
+
+.afterdark-unfiltered { display: none; }
+:root[data-afterdark="hide-images"] .afterdark-unfiltered, :root[data-afterdark="off"] .afterdark-unfiltered { display: block; }
+:root[data-afterdark="hide-images"] .afterdark-filtered, :root[data-afterdark="off"] .afterdark-filtered { display: none; }
+:root[data-afterdark="on"] .afterdark-post { display: none; }
+
+:root[data-afterdark="hide-images"] .card[data-afterdark] .card-media img,
+:root[data-afterdark="hide-images"] .afterdark-post .prose img { filter: blur(24px); }
+/* Inside a clipping box, scale up so the blur's dark fringe falls outside it */
+:root[data-afterdark="hide-images"] .card[data-afterdark] .card-media img,
+:root[data-afterdark="hide-images"] .afterdark-media img { transform: scale(1.15); }
+:root[data-afterdark="hide-images"] .afterdark-media[data-revealed] img { filter: none; transform: none; }
+.afterdark-media { position: relative; display: inline-block; max-width: 100%; overflow: hidden; border-radius: 6px; vertical-align: top; }
+.afterdark-media img { display: block; }
+.afterdark-reveal { display: none; }
+:root[data-afterdark="hide-images"] .afterdark-reveal { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; width: 100%; font: inherit; font-size: 0.875rem; color: #fff; background: rgb(0 0 0 / 0.2); border: 0; cursor: pointer; }
+.afterdark-reveal span { padding: 0.3rem 0.85rem; background: rgb(0 0 0 / 0.6); border-radius: 999px; }
+.afterdark-reveal:hover span, .afterdark-reveal:focus-visible span { background: rgb(0 0 0 / 0.8); }
+.afterdark-reveal:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
 .site-footer { margin-top: 4rem; padding: 2rem 0; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.875rem; }
 
 time { color: var(--muted); font-size: 0.875rem; display: block; }
@@ -87,7 +136,7 @@ time { color: var(--muted); font-size: 0.875rem; display: block; }
 
 /* Index: 3 featured cards (hero + 2 side by side), then a grid of the rest */
 .card { position: relative; display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--bg); }
-.card-media { position: relative; width: 100%; aspect-ratio: 16 / 9; border-bottom: 1px solid var(--border); }
+.card-media { position: relative; width: 100%; aspect-ratio: 16 / 9; border-bottom: 1px solid var(--border); overflow: hidden; }
 .card-media img { object-fit: cover; }
 /* The title link stretches over the whole card, so any click on it opens the post */
 .card .post-link::after { content: ""; position: absolute; inset: 0; }
@@ -127,6 +176,7 @@ time { color: var(--muted); font-size: 0.875rem; display: block; }
 .about-body .about-portrait img { object-fit: cover; border: 0; border-radius: 0; }
 .tags { list-style: none; padding: 0; margin: 0.5rem 0 0; display: flex; flex-wrap: wrap; gap: 0.5rem; font-size: 0.875rem; }
 .tags li { color: var(--tag-fg); background: var(--tag-bg); border: 1px solid var(--tag-border); border-radius: 999px; padding: 0.1rem 0.6rem; line-height: 1.5; }
+.tags li.tag-afterdark { color: var(--afterdark-fg); background: var(--afterdark-bg); border-color: var(--afterdark-border); }
 
 .prose img { max-width: 100%; height: auto; border: 1px solid var(--border); border-radius: 6px; }
 .prose blockquote { margin: 1rem 0; padding-left: 1rem; border-left: 3px solid var(--quote-border); color: var(--muted); }

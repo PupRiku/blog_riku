@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import { Inter, Raleway } from "next/font/google";
 import Link from "next/link";
 import { AdScripts } from "@/components/Ads";
+import { AfterDarkBanner, AfterDarkSelect } from "@/components/AfterDark";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { afterDarkInitScript } from "@/lib/afterdark";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter", display: "swap" });
@@ -22,7 +24,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className={`${inter.variable} ${raleway.variable}`} suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript + afterDarkInitScript }} />
       </head>
       <body>
         <div className="container">
@@ -35,9 +37,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <a href="https://riku.gay">
                 riku.gay <span aria-hidden="true">↗</span>
               </a>
+              <AfterDarkSelect />
               <ThemeToggle />
             </nav>
           </header>
+          <AfterDarkBanner />
           <main>{children}</main>
           <footer className="site-footer">© {new Date().getFullYear()} riku</footer>
         </div>
