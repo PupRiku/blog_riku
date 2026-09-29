@@ -7,6 +7,7 @@
   --tag-fg: #40356f;       /* brand purple */
   --tag-bg: #e9e6f4;
   --tag-border: #cfc9e6;
+  --quote-border: #b9b1d9; /* faded brand purple */
   --highlight: #69e9f5;    /* brand cyan: selection only, never text */
   --code-bg: #f6f8fa;
 }
@@ -20,6 +21,7 @@
     --tag-fg: #e4dffa;
     --tag-bg: #40356f;     /* brand purple */
     --tag-border: #574a8f;
+    --quote-border: #4a3f80;
     --code-bg: #0d1117;
   }
 }
@@ -50,11 +52,11 @@ time { color: var(--muted); font-size: 0.875rem; display: block; }
 
 .post-header { margin-bottom: 2rem; }
 .post-header h1 { margin: 0 0 0.25rem; line-height: 1.2; }
-.tags { list-style: none; padding: 0; margin: 0.5rem 0 0; display: flex; flex-wrap: wrap; gap: 0.5rem; font-size: 0.8rem; }
+.tags { list-style: none; padding: 0; margin: 0.5rem 0 0; display: flex; flex-wrap: wrap; gap: 0.5rem; font-size: 0.875rem; }
 .tags li { color: var(--tag-fg); background: var(--tag-bg); border: 1px solid var(--tag-border); border-radius: 999px; padding: 0.1rem 0.6rem; line-height: 1.5; }
 
 .prose img { max-width: 100%; height: auto; }
-.prose blockquote { margin: 1rem 0; padding-left: 1rem; border-left: 3px solid var(--border); color: var(--muted); }
+.prose blockquote { margin: 1rem 0; padding-left: 1rem; border-left: 3px solid var(--quote-border); color: var(--muted); }
 .prose :not(pre) > code { background: var(--code-bg); padding: 0.1em 0.3em; border-radius: 4px; font-size: 0.9em; }
 .callout { border: 1px solid var(--border); border-left: 4px solid var(--accent); padding: 0.75rem 1rem; border-radius: 4px; margin: 1rem 0; }
 
