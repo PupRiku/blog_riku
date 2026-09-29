@@ -15,7 +15,7 @@ Add `posts/<slug>.mdx`:
 ```mdx
 ---
 title: My post            # required
-date: 2026-09-29          # required
+date: 2026-09-29          # required; add a time (2026-09-29T14:30) to order same-day posts
 description: One-liner    # optional, used on index + meta tags
 tags: [foo, bar]          # optional
 slug: custom-url          # optional, defaults to the filename
