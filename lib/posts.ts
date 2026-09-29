@@ -72,10 +72,20 @@ function parseTags(value: unknown, file: string): string[] {
 
 function parseImage(value: unknown, file: string): string | undefined {
   if (isAbsent(value)) return undefined;
-  if (typeof value !== "string" || !/^(\/[^/]|https?:\/\/)/.test(value)) {
+  if (typeof value !== "string" || !(/^\/[^/]/.test(value) || isHttpUrl(value))) {
     throw invalid("image", file, "a site path like /images/post.jpg or an http(s) URL", value);
   }
   return value;
+}
+
+function isHttpUrl(value: string): boolean {
+  // Require the scheme literally: URL() would also accept "https:example.com".
+  if (!/^https?:\/\//.test(value)) return false;
+  try {
+    return new URL(value).hostname !== "";
+  } catch {
+    return false; // "https://" and other unparseable values
+  }
 }
 
 function readPostFile(file: string): Post {
