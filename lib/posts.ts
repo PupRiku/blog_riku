@@ -7,7 +7,8 @@ const POSTS_DIR = path.join(process.cwd(), "posts");
 
 // A single lowercase URL segment: "my-post", "2026-recap".
 const SLUG_RE = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
-const DATE_RE = /^(\d{4})-(\d{2})-(\d{2})$/;
+// YYYY-MM-DD, optionally followed by a time (THH:mm) to order same-day posts.
+const DATE_RE = /^(\d{4}-\d{2}-\d{2})(?:T([01]\d|2[0-3]):[0-5]\d)?$/;
 
 // CORE_SCHEMA has no timestamp type, so dates stay as the literal strings
 // written in the file instead of being coerced (and rolled over) by YAML.
@@ -18,7 +19,7 @@ const MATTER_OPTIONS = {
 export type PostMeta = {
   slug: string;
   title: string;
-  date: string; // ISO yyyy-mm-dd
+  date: string; // yyyy-mm-dd or yyyy-mm-ddThh:mm
   description?: string;
   tags: string[];
 };
@@ -27,11 +28,14 @@ export type Post = PostMeta & { content: string };
 
 function parseDate(value: unknown, file: string): string {
   const s = typeof value === "string" ? value : "";
-  const m = DATE_RE.exec(s);
-  // Reject values like 2026-02-30 that Date would silently roll over.
-  const d = m && new Date(Date.UTC(+m[1], +m[2] - 1, +m[3]));
-  if (!d || d.toISOString().slice(0, 10) !== s) {
-    throw new Error(`Invalid or missing "date" in ${file}: expected YYYY-MM-DD, got ${JSON.stringify(value)}`);
+  const day = DATE_RE.exec(s)?.[1];
+  const d = day ? new Date(`${day}T00:00:00Z`) : undefined;
+  // Reject impossible months (2026-13-01 is an Invalid Date) and days that
+  // Date would silently roll over (2026-02-30 becomes March 2).
+  if (!d || Number.isNaN(d.getTime()) || d.toISOString().slice(0, 10) !== day) {
+    throw new Error(
+      `Invalid or missing "date" in ${file}: expected YYYY-MM-DD or YYYY-MM-DDTHH:mm, got ${JSON.stringify(value)}`,
+    );
   }
   return s;
 }
@@ -92,7 +96,10 @@ function loadPosts(): Post[] {
     if (seen.has(p.slug)) throw new Error(`Duplicate post slug: ${p.slug}`);
     seen.add(p.slug);
   }
-  return posts.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0));
+  // Newest first. Dates compare as strings, so a same-day post with a time
+  // sorts above one without; exact ties fall back to slug so the order never
+  // depends on directory listing order.
+  return posts.sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug));
 }
 
 // Posts only change between builds, so read them once per process in
@@ -115,7 +122,7 @@ export function getPostBySlug(slug: string): Post | undefined {
 }
 
 export function formatDate(iso: string): string {
-  return new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-US", {
+  return new Date(`${iso.slice(0, 10)}T00:00:00Z`).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
     day: "numeric",
