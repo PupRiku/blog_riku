@@ -13,8 +13,9 @@ export default function AboutPage() {
         <h1>About</h1>
       </header>
       <div className="prose about-body">
-        {/* Portrait placeholder. To use a real photo, drop the fallback classes and aria-hidden, and put
-            <Image src="/portrait.jpg" alt="…" fill sizes="12rem" /> inside (file goes in /public). */}
+        {/* Portrait placeholder. To use a real photo: put the file in /public, add
+            `import Image from "next/image";` at the top, drop the fallback classes and aria-hidden,
+            and put <Image src="/portrait.jpg" alt="…" fill sizes="12rem" /> inside. */}
         <div className="about-portrait card-fallback fallback-purple" aria-hidden="true" />
         <p>
           Placeholder intro paragraph. Who I am and what this blog is about. A few sentences here so
