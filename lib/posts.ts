@@ -29,8 +29,10 @@ export type Post = PostMeta & { content: string };
 function parseDate(value: unknown, file: string): string {
   const s = typeof value === "string" ? value : "";
   const day = DATE_RE.exec(s)?.[1];
-  // Reject values like 2026-02-30 that Date would silently roll over.
-  if (!day || new Date(`${day}T00:00:00Z`).toISOString().slice(0, 10) !== day) {
+  const d = day ? new Date(`${day}T00:00:00Z`) : undefined;
+  // Reject impossible months (2026-13-01 is an Invalid Date) and days that
+  // Date would silently roll over (2026-02-30 becomes March 2).
+  if (!d || Number.isNaN(d.getTime()) || d.toISOString().slice(0, 10) !== day) {
     throw new Error(
       `Invalid or missing "date" in ${file}: expected YYYY-MM-DD or YYYY-MM-DDTHH:mm, got ${JSON.stringify(value)}`,
     );
