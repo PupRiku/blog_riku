@@ -1,0 +1,34 @@
+---
+title: Hello, world
+date: 2026-09-29
+description: First post — checking that the MDX pipeline works end to end.
+tags: [meta]
+---
+
+This is the first post on **blog.riku.gay**. If you can read this, frontmatter
+parsing and MDX rendering are both working.
+
+## Markdown bits
+
+- Lists work
+- So do [links](https://nextjs.org) and `inline code`
+
+> Blockquotes too.
+
+## Syntax highlighting
+
+```ts title="greet.ts"
+export function greet(name: string): string {
+  return `hi, ${name}!`;
+}
+
+console.log(greet("riku"));
+```
+
+```bash
+npm run dev
+```
+
+## A custom component
+
+<Callout>This box is a React component used directly inside MDX.</Callout>
