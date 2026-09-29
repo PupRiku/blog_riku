@@ -18,11 +18,16 @@ title: My post            # required
 date: 2026-09-29          # required; add a time (2026-09-29T14:30) to order same-day posts
 description: One-liner    # optional, used on index + meta tags
 tags: [foo, bar]          # optional
+image: /images/my-post.jpg # optional, see below
 slug: custom-url          # optional, defaults to the filename
 ---
 
 Content here. `<Callout>` and anything else in `components/mdx.tsx` is usable without importing.
 ```
+
+`image` is the card image on the index page: a path under `public/` (starting with `/`) or a full `http(s)://` URL. It's cropped to the shape of the card it lands in (2:1 for the newest post's hero card, 16:9 for the next two, 3:1 in the grid below), so keep the subject near the center. Posts without one get a solid brand-color block instead.
+
+The index shows the 3 newest posts as featured cards and everything older in a smaller grid below.
 
 ## Layout
 
