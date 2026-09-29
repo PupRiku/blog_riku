@@ -26,7 +26,9 @@ function PostCard({ post, index, size }: { post: PostMeta; index: number; size: 
             alt=""
             fill
             sizes={SIZES[size]}
-            preload={size === "hero"}
+            // Never preload an #AfterDark cover: the index renders a hidden
+            // unfiltered copy, and under the default setting it must not load.
+            preload={size === "hero" && !isAfterDarkPost(post)}
             // Local images get resized and converted; remote URLs pass through as-is,
             // so any host works without allowlisting it in next.config.
             unoptimized={/^https?:\/\//.test(post.image)}
