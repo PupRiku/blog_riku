@@ -22,6 +22,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Link href="/" className="site-title">
               blog.riku.gay
             </Link>
+            <nav className="site-nav" aria-label="Main">
+              <Link href="/about">About</Link>
+              <a href="https://riku.gay">
+                riku.gay <span aria-hidden="true">↗</span>
+              </a>
+            </nav>
           </header>
           <main>{children}</main>
           <footer className="site-footer">© {new Date().getFullYear()} riku</footer>
