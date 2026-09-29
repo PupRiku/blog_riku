@@ -3,6 +3,7 @@ node_modules/
 out/
 next-env.d.ts
 *.tsbuildinfo
-.env*.local
+.env*
+!.env.example
 .vercel
 .claude/launch.json
