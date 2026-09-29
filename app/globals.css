@@ -44,8 +44,11 @@ a { color: var(--accent); }
 ::selection { background: var(--highlight); color: #1a1a1a; }
 
 .container { max-width: 42rem; margin: 0 auto; padding: 0 1rem; }
-.site-header { padding: 2rem 0 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
-.site-title { font-weight: 700; font-size: 1.1rem; color: var(--fg); text-decoration: none; }
+.site-header { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding: 2rem 0 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
+.site-title { font-weight: 700; font-size: 1.1rem; color: var(--fg); text-decoration: none; white-space: nowrap; }
+.site-nav { display: flex; gap: 1.25rem; font-size: 0.95rem; }
+.site-nav a { color: var(--muted); text-decoration: none; white-space: nowrap; transition: color 0.15s; }
+.site-nav a:hover, .site-nav a:focus-visible { color: var(--accent); }
 .site-footer { margin-top: 4rem; padding: 2rem 0; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.875rem; }
 
 time { color: var(--muted); font-size: 0.875rem; display: block; }
@@ -89,6 +92,10 @@ time { color: var(--muted); font-size: 0.875rem; display: block; }
 
 .post-header { margin-bottom: 2rem; }
 .post-header h1 { margin: 0 0 0.25rem; line-height: 1.2; }
+/* About: portrait floats right and the text wraps around it */
+.about-body { display: flow-root; }
+.about-portrait { position: relative; float: right; width: min(12rem, 40%); aspect-ratio: 3 / 4; margin: 1.3rem 0 1rem 1.5rem; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.about-portrait img { object-fit: cover; border: 0; border-radius: 0; }
 .tags { list-style: none; padding: 0; margin: 0.5rem 0 0; display: flex; flex-wrap: wrap; gap: 0.5rem; font-size: 0.875rem; }
 .tags li { color: var(--tag-fg); background: var(--tag-bg); border: 1px solid var(--tag-border); border-radius: 999px; padding: 0.1rem 0.6rem; line-height: 1.5; }
 
