@@ -42,7 +42,7 @@ export default function AboutPage() {
           You'll find posts from professional to personal, spanning various
           topics. Fair warning, there will be some <em>spicier</em> topics, as I
           am heavily involved in the leather and kink communities, but there is
-          a toggle to hide those posts, or just the images of the posts (No
+          a toggle to hide those posts, or blur just the images of the posts (No
           nudity, but some kinkwear/activities may be pictured).
         </p>
         <p>
