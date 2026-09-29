@@ -1,5 +1,8 @@
 import Image from "next/image";
 import Link from "next/link";
+import { Suspense } from "react";
+import { AfterDarkNotice } from "@/components/AfterDark";
+import { isAfterDarkPost, isAfterDarkTag } from "@/lib/afterdark";
 import { formatDate, getAllPosts, type PostMeta } from "@/lib/posts";
 
 const FEATURED_COUNT = 3;
@@ -15,7 +18,7 @@ const SIZES = {
 function PostCard({ post, index, size }: { post: PostMeta; index: number; size: "hero" | "featured" | "small" }) {
   const Heading = size === "small" ? "h3" : "h2";
   return (
-    <article className={`card card-${size}`}>
+    <article className={`card card-${size}`} data-afterdark={isAfterDarkPost(post) ? "" : undefined}>
       {post.image ? (
         <div className="card-media">
           <Image
@@ -23,7 +26,9 @@ function PostCard({ post, index, size }: { post: PostMeta; index: number; size: 
             alt=""
             fill
             sizes={SIZES[size]}
-            preload={size === "hero"}
+            // Never preload an #AfterDark cover: the index renders a hidden
+            // unfiltered copy, and under the default setting it must not load.
+            preload={size === "hero" && !isAfterDarkPost(post)}
             // Local images get resized and converted; remote URLs pass through as-is,
             // so any host works without allowlisting it in next.config.
             unoptimized={/^https?:\/\//.test(post.image)}
@@ -43,7 +48,9 @@ function PostCard({ post, index, size }: { post: PostMeta; index: number; size: 
         {post.tags.length > 0 && (
           <ul className="tags">
             {post.tags.map((t) => (
-              <li key={t}>#{t}</li>
+              <li key={t} className={isAfterDarkTag(t) ? "tag-afterdark" : undefined}>
+                #{t}
+              </li>
             ))}
           </ul>
         )}
@@ -52,9 +59,7 @@ function PostCard({ post, index, size }: { post: PostMeta; index: number; size: 
   );
 }
 
-export default function Home() {
-  const posts = getAllPosts();
-
+function PostIndex({ posts }: { posts: PostMeta[] }) {
   if (posts.length === 0) return <p>No posts yet.</p>;
 
   const featured = posts.slice(0, FEATURED_COUNT);
@@ -77,6 +82,29 @@ export default function Home() {
           </div>
         </section>
       )}
+    </>
+  );
+}
+
+export default function Home() {
+  const posts = getAllPosts();
+  const afterDark = posts.filter(isAfterDarkPost);
+  if (afterDark.length === 0) return <PostIndex posts={posts} />;
+
+  // The page is static, so both versions are rendered and CSS shows the one
+  // matching data-afterdark on <html>. Filtering the list (rather than hiding
+  // cards) lets the next post take over the hero and featured slots.
+  return (
+    <>
+      <Suspense>
+        <AfterDarkNotice posts={afterDark.map(({ slug, title }) => ({ slug, title }))} />
+      </Suspense>
+      <div className="afterdark-filtered">
+        <PostIndex posts={posts.filter((p) => !isAfterDarkPost(p))} />
+      </div>
+      <div className="afterdark-unfiltered">
+        <PostIndex posts={posts} />
+      </div>
     </>
   );
 }
