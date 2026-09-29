@@ -36,26 +36,46 @@ function parseDate(value: unknown, file: string): string {
   return s;
 }
 
+// Only an omitted key (or a bare `key:`, which YAML reads as null) counts
+// as absent; any value that is present must have the right type.
+const isAbsent = (value: unknown) => value === undefined || value === null;
+
+function invalid(field: string, file: string, expected: string, value: unknown): Error {
+  return new Error(`Invalid "${field}" in ${file}: expected ${expected}, got ${JSON.stringify(value)}`);
+}
+
+function parseNonEmptyString(value: unknown, field: string, file: string): string {
+  if (typeof value !== "string" || !value.trim()) {
+    throw invalid(field, file, "a non-empty string (quote values like 1984 or yes)", value);
+  }
+  return value;
+}
+
 function parseSlug(value: unknown, file: string): string {
-  const slug = typeof value === "string" && value ? value : file.replace(/\.mdx$/, "");
-  if (!SLUG_RE.test(slug)) {
-    throw new Error(
-      `Invalid slug ${JSON.stringify(slug)} in ${file}: use lowercase letters, digits, and single hyphens`,
-    );
+  const slug = isAbsent(value) ? file.replace(/\.mdx$/, "") : value;
+  if (typeof slug !== "string" || !SLUG_RE.test(slug)) {
+    throw invalid("slug", file, "lowercase letters, digits, and single hyphens", slug);
   }
   return slug;
+}
+
+function parseTags(value: unknown, file: string): string[] {
+  if (isAbsent(value)) return [];
+  if (!Array.isArray(value)) throw invalid("tags", file, "a list like [foo, bar]", value);
+  return value.map((t) => parseNonEmptyString(t, "tags", file));
 }
 
 function readPostFile(file: string): Post {
   const raw = fs.readFileSync(path.join(POSTS_DIR, file), "utf8");
   const { data, content } = matter(raw, MATTER_OPTIONS);
-  if (!data.title) throw new Error(`Missing "title" in ${file}`);
   return {
     slug: parseSlug(data.slug, file),
-    title: String(data.title),
+    title: parseNonEmptyString(data.title, "title", file),
     date: parseDate(data.date, file),
-    description: data.description ? String(data.description) : undefined,
-    tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
+    description: isAbsent(data.description)
+      ? undefined
+      : parseNonEmptyString(data.description, "description", file),
+    tags: parseTags(data.tags, file),
     content,
   };
 }
