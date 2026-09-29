@@ -22,6 +22,7 @@ export type PostMeta = {
   date: string; // yyyy-mm-dd or yyyy-mm-ddThh:mm
   description?: string;
   tags: string[];
+  image?: string; // site path (/images/x.jpg) or http(s) URL
 };
 
 export type Post = PostMeta & { content: string };
@@ -69,6 +70,14 @@ function parseTags(value: unknown, file: string): string[] {
   return value.map((t) => parseNonEmptyString(t, "tags", file));
 }
 
+function parseImage(value: unknown, file: string): string | undefined {
+  if (isAbsent(value)) return undefined;
+  if (typeof value !== "string" || !/^(\/[^/]|https?:\/\/)/.test(value)) {
+    throw invalid("image", file, "a site path like /images/post.jpg or an http(s) URL", value);
+  }
+  return value;
+}
+
 function readPostFile(file: string): Post {
   const raw = fs.readFileSync(path.join(POSTS_DIR, file), "utf8");
   const { data, content } = matter(raw, MATTER_OPTIONS);
@@ -80,6 +89,7 @@ function readPostFile(file: string): Post {
       ? undefined
       : parseNonEmptyString(data.description, "description", file),
     tags: parseTags(data.tags, file),
+    image: parseImage(data.image, file),
     content,
   };
 }
