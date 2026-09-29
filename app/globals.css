@@ -55,7 +55,8 @@ time { color: var(--muted); font-size: 0.875rem; display: block; }
 
 /* Index: 3 featured cards (hero + 2 side by side), then a grid of the rest */
 .card { position: relative; display: flex; flex-direction: column; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--bg); }
-.card-media { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-bottom: 1px solid var(--border); }
+.card-media { position: relative; width: 100%; aspect-ratio: 16 / 9; border-bottom: 1px solid var(--border); }
+.card-media img { object-fit: cover; }
 /* The title link stretches over the whole card, so any click on it opens the post */
 .card .post-link::after { content: ""; position: absolute; inset: 0; }
 .card:hover .post-link { color: var(--accent); }

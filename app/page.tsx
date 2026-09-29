@@ -1,17 +1,34 @@
+import Image from "next/image";
 import Link from "next/link";
 import { formatDate, getAllPosts, type PostMeta } from "@/lib/posts";
 
 const FEATURED_COUNT = 3;
 // Posts without an image get a solid block, cycling orange → purple → cyan.
 const FALLBACKS = ["fallback-orange", "fallback-purple", "fallback-cyan"];
+// Rendered width of the image at each card size, so next/image picks a fitting file.
+const SIZES = {
+  hero: "(max-width: 40rem) 100vw, 40rem",
+  featured: "(max-width: 40rem) 100vw, 20rem",
+  small: "(max-width: 40rem) 100vw, 13rem",
+};
 
 function PostCard({ post, index, size }: { post: PostMeta; index: number; size: "hero" | "featured" | "small" }) {
   const Heading = size === "small" ? "h3" : "h2";
   return (
     <article className={`card card-${size}`}>
       {post.image ? (
-        // Plain <img>: images can be arbitrary remote URLs, which next/image would need allowlisted.
-        <img className="card-media" src={post.image} alt="" loading={size === "hero" ? "eager" : "lazy"} />
+        <div className="card-media">
+          <Image
+            src={post.image}
+            alt=""
+            fill
+            sizes={SIZES[size]}
+            preload={size === "hero"}
+            // Local images get resized and converted; remote URLs pass through as-is,
+            // so any host works without allowlisting it in next.config.
+            unoptimized={/^https?:\/\//.test(post.image)}
+          />
+        </div>
       ) : (
         <div className={`card-media card-fallback ${FALLBACKS[index % FALLBACKS.length]}`} aria-hidden="true" />
       )}
