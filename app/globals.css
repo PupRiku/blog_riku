@@ -172,7 +172,7 @@ time { color: var(--muted); font-size: 0.875rem; display: block; }
 .post-header h1 { margin: 0 0 0.25rem; line-height: 1.2; }
 /* About: portrait floats right and the text wraps around it */
 .about-body { display: flow-root; }
-.about-portrait { position: relative; float: right; width: min(12rem, 40%); aspect-ratio: 3 / 4; margin: 1.3rem 0 1rem 1.5rem; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
+.about-portrait { position: relative; float: right; width: min(12rem, 40%); aspect-ratio: 2 / 3; margin: 1.3rem 0 1rem 1.5rem; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; }
 .about-body .about-portrait img { object-fit: cover; border: 0; border-radius: 0; }
 .tags { list-style: none; padding: 0; margin: 0.5rem 0 0; display: flex; flex-wrap: wrap; gap: 0.5rem; font-size: 0.875rem; }
 .tags li { color: var(--tag-fg); background: var(--tag-bg); border: 1px solid var(--tag-border); border-radius: 999px; padding: 0.1rem 0.6rem; line-height: 1.5; }
