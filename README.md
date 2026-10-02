@@ -18,7 +18,7 @@ title: My post            # required
 date: 2026-09-29          # required; add a time (2026-09-29T14:30) to order same-day posts
 description: One-liner    # optional, used on index + meta tags
 tags: [foo, bar]          # optional
-image: /images/my-post.jpg # optional, see below
+image: /images/posts/my-post/cover.jpg # optional, see below
 slug: custom-url          # optional, defaults to the filename
 ---
 
@@ -41,7 +41,7 @@ The choice is saved in `localStorage` and applied before first paint, so there's
 
 ## About page
 
-`app/about/page.tsx` is a standalone page, not a post, so it never shows up in the index. The portrait is `public/images/about-portrait.jpg` (2:3), shown with `next/image`.
+`app/about/page.tsx` is a standalone page, not a post, so it never shows up in the index. The portrait is `public/images/pages/about-portrait.jpg` (2:3), shown with `next/image`.
 
 ## Layout
 

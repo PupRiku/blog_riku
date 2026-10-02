@@ -16,7 +16,7 @@ export default function AboutPage() {
       <div className="prose about-body">
         <div className="about-portrait">
           <Image
-            src="/images/about-portrait.jpg"
+            src="/images/pages/about-portrait.jpg"
             alt="Portrait of Riku."
             fill
             sizes="12rem"

@@ -22,7 +22,7 @@ export type PostMeta = {
   date: string; // yyyy-mm-dd or yyyy-mm-ddThh:mm
   description?: string;
   tags: string[];
-  image?: string; // site path (/images/x.jpg) or http(s) URL
+  image?: string; // site path (/images/posts/my-post/x.jpg) or http(s) URL
 };
 
 export type Post = PostMeta & { content: string };
@@ -73,7 +73,7 @@ function parseTags(value: unknown, file: string): string[] {
 function parseImage(value: unknown, file: string): string | undefined {
   if (isAbsent(value)) return undefined;
   if (typeof value !== "string" || !(/^\/[^/]/.test(value) || isHttpUrl(value))) {
-    throw invalid("image", file, "a site path like /images/post.jpg or an http(s) URL", value);
+    throw invalid("image", file, "a site path like /images/posts/my-post/cover.jpg or an http(s) URL", value);
   }
   return value;
 }
